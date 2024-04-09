@@ -3,8 +3,7 @@ title: 浅析 Go 语言中的锁
 author: siegelion
 tags: [Go]
 categories: [笔记]
-date created: 2023-03-14 17:24
-date updated: 2023-07-30 15:57
+date: 2023-03-14 17:24
 ---
 
 # 锁

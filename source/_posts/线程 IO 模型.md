@@ -3,8 +3,7 @@ title: 线程 I/O 模型
 author: siegelion
 tags:  [操作系统]
 categories: [笔记]
-date created: 2022-11-13 12:55
-date updated: 2022-11-13 14:10
+date: 2022-11-13 12:55
 ---
 
 UNIX 网络编程中共提到了 5 种 I/O 模型，分别为阻塞 I/O、非阻塞 I/O、I/O 多路复用、信号驱动 I/O、异步 I/O，前四种都属于同步 I/O。

@@ -5,8 +5,7 @@ tags:
   - Go
 categories:
   - 笔记
-date created: 2023-03-14 11:28
-date updated: 2023-03-15 16:01
+date: 2023-03-14 11:28
 ---
 
 # Go 中的”面向对象“

@@ -3,8 +3,7 @@ title: 浅析 Go 垃圾回收
 author: siegelion
 tags: [Go]
 categories: [笔记]
-date created: 2023-03-20 15:32
-date updated: 2023-08-01 15:32
+date: 2023-03-20 15:32
 ---
 
 # 垃圾回收
