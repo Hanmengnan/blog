@@ -1,14 +1,21 @@
 'use strict';
 
+let css;
+try {
+  css = require('css');
+} catch (error) {
+  if (error.code === 'MODULE_NOT_FOUND') {
+    css = require('@adobe/css-tools');
+  } else {
+    throw error;
+  }
+}
+
 const fs = require('fs');
 const objUtil = require('../../utils/object');
 const resolveModule = require('../../utils/resolve');
 
 module.exports = (hexo) => {
-
-  function parseStyleValue(line, attr) {
-    return line.split(attr)[1].replace(';', '').trim();
-  }
 
   function resolveHighlight(name) {
     if (!name) {
@@ -21,22 +28,21 @@ module.exports = (hexo) => {
     }
     let backgroundColor;
     if (fs.existsSync(file)) {
-      const css = fs.readFileSync(file).toString();
-      let rule = '';
-      css.replace(/\.hljs(\s+|,[^{]+){(.*?)}/sg, (match, $1, content) => {
-        rule += content;
-        return match;
-      });
-      rule.split('\n').forEach(line => {
-        if (line.includes('background:')) {
-          backgroundColor = parseStyleValue(line, 'background:');
-        } else if (line.includes('background-color:')) {
-          backgroundColor = parseStyleValue(line, 'background-color:');
-        }
-      });
+      const content = fs.readFileSync(file, 'utf8');
+      css.parse(content).stylesheet.rules
+        .filter(rule => rule.type === 'rule' && rule.selectors.some(selector => selector.endsWith('.hljs')))
+        .flatMap(rule => rule.declarations)
+        .forEach(declaration => {
+          if (declaration.property === 'background' || declaration.property === 'background-color') {
+            backgroundColor = declaration.value;
+          }
+        });
     } else {
       hexo.log.error(`[Fluid] highlightjs style '${name}' not found`);
       return {};
+    }
+    if (backgroundColor === 'white' || backgroundColor === '#ffffff') {
+      backgroundColor = '#fff';
     }
     return { file, backgroundColor };
   }
@@ -79,6 +85,7 @@ module.exports = (hexo) => {
       auto_detect: true,
       line_number: config.code.highlight.line_number || false
     });
+    hexo.config.syntax_highlighter = 'highlight.js';  // hexo v7.0.0+ config
     hexo.theme.config.code.highlight.highlightjs = objUtil.merge({}, hexo.theme.config.code.highlight.highlightjs, {
       light: resolveHighlight(hexo.theme.config.code.highlight.highlightjs.style),
       dark : hexo.theme.config.dark_mode.enable && resolveHighlight(hexo.theme.config.code.highlight.highlightjs.style_dark)
@@ -118,6 +125,7 @@ module.exports = (hexo) => {
       preprocess : config.code.highlight.prismjs.preprocess || false,
       line_number: config.code.highlight.line_number || false
     });
+    hexo.config.syntax_highlighter = 'prismjs';  // hexo v7.0.0+ config
     hexo.theme.config.code.highlight.prismjs = objUtil.merge({}, hexo.theme.config.code.highlight.prismjs, {
       light: resolvePrism(hexo.theme.config.code.highlight.prismjs.style),
       dark : hexo.theme.config.dark_mode.enable && resolvePrism(hexo.theme.config.code.highlight.prismjs.style_dark)
