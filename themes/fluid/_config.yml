@@ -848,8 +848,8 @@ remark42:
 # Based on Tencent CloudBase
 # See: https://twikoo.js.org
 twikoo:
-  envId: https://siegelion.cn:5700
-  #envId: siegelion-9gp4thiq6045c065
+  # envId: https://siegelion.cn:5700
+  envId: https://siegelionnn-tiwkoo.hf.space
   region: ap-shanghai
   path: window.location.pathname
 
